@@ -146,5 +146,29 @@ class Topic(models.Model):
     python manage.py  migrate
     # 结果确认learnings_logs应用迁移正常
     ```
- **注：每当修改“学习笔记”管理的数据时，三步：修改models.py;对learning_logs调用makemigrations;让Django迁移项目。**
+ **注**：每当修改“学习笔记”**管理的数据**时，三步：修改models.py;对learning_logs调用makemigrations;让Django迁移项目。  
+ 
+3. Django管理网站-通过管理网站使用Topic模型添加主题  
+Django提供的管理网站（admin site）,处理模型。网站管理员可使用管理网站，普通用户不能使用。  
+(了解)最严格权限设置只允许用户阅读网站的公开信息；注册的用户可阅读自己私有数据，还可查看一些只有会员能查看的信息。
+   - (1) 创建超级用户
+   ```python
+   python manage.py createsuperuser
+   # 输入超级用户名、邮箱、两次密码
+   ```
+   - (2) 向管理网站注册模型    
+   models.py所在目录的admin.py
+   ```python
+   from django.contrib import admin
+   
+   #  向管理网站注册Topic模型
+   from learning_logs.models import Topic
+   
+   admin.site.register(Topic)
+   ```
+   激活虚拟环境，执行命令python manage.py runserver，访问http://localhost:8000/admin/ -输入超级用户名和密码
+   - (3) 添加主题  
+   单击Topics,点击Add，看到一个用于添加新主题的表单。save
+# 三、创建网页：学习笔记主页
+# 四、创建其他网页
   

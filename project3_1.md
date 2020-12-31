@@ -169,6 +169,63 @@ Django提供的管理网站（admin site）,处理模型。网站管理员可使
    激活虚拟环境，执行命令python manage.py runserver，访问http://localhost:8000/admin/ -输入超级用户名和密码
    - (3) 添加主题  
    单击Topics,点击Add，看到一个用于添加新主题的表单。save
+
+4.  定义模型Entry  
+添加条目定义模型，每个条目与特定主题相关联，**多对一关系**。即多个条目关联到同一主题  
+**外键**，引用了数据库中的另一条记录；将每个条目关联到特定主题。
+models.py
+```python
+from django.db import models
+
+class Topic(models.Model):
+    --snip--
+
+class Entry(models.Model):
+    """学到的有关某个主题的具体知识"""
+    # 每个主题创建时，分配一个键（ID）
+    # 需要在两项数据之间建立联系时，Django使用与每项信息相关联的键。
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    text = models.TextField()
+    date_added = models.DateTimeField(auto_now_add=True)
+    
+    # Meta存储用于管理管理模型的额外信息。设置一个特殊属性，Entries来表示多个条目。
+    # 若无这个类，用Entrys表示多个条目
+    class Meta:
+        verbose_name_plural = 'entries'
+
+    def __str__(self):
+        """返回模型的字符串表示"""
+        return self.text[:50] + "..."
+```
+
+5. 迁移模型Entry  
+**添加了一个新模型，需要再次迁移数据库**
+   - (1) 修改models.py
+   - (2) 执行命令：
+   ```python
+   python manage.py makemigrations app_name
+   ```
+   - (3) 在执行命令
+   ```python
+   python manage.py migrate
+   ```
+   
+6. 向管理网站注册Entry  
+admin.py
+```python
+from django.contrib import admin
+
+from learning_logs.models import Topic, Entry
+
+admin.site.register(Topic)
+admin.site.register(Entry)
+```
+
+7. Django shell:交互式编程
+```python
+python manage.py shell
+```
+
 # 三、创建网页：学习笔记主页
 # 四、创建其他网页
   

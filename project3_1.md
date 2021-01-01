@@ -230,39 +230,39 @@ python manage.py shell
 用Djan创建网页的过程三阶段：**定义URL、编写视图、编写模板**  
 **URL模式**描述URL如何设计，让Django知道如何将浏览器请求与网站URL匹配，以确定返回哪个网页。  
 每个URL映射到特定的视图，**视图函数**获取并处理网页所需要的数据，视图函数通常调用一个模板，**模板**生成浏览器能够理解的网页。  
-1. 映射URL
-项目主文件夹learning_log的urls.py
-```python
-# 导入为项目和管理网站管理URL的函数和模块
-from django.conf.urls import include, path
-from django.contrib import admin
+1. 映射URL  
+   - (1) 项目主文件夹learning_log的urls.py
+      ```python
+      # 导入为项目和管理网站管理URL的函数和模块
+      from django.conf.urls import include, path
+      from django.contrib import admin
 
-# urlpatterns包含项目中的应用程序的URL
-urlpatterns = [
-    # admin.site.urls定义了在管理网站中请求的所有URL
-    path('admin/', include(admin.site.urls)),
-    # namespace让learning_logs的URL与项目中的其他URL区分
-    path('', include('learning_logs.urls', namespace='learning_logs')),
-    ]
-```  
-learning_logs中的urls.py
-```python
-"""定义learning_logs的URL模式"""
-# 用path将URL映射到视图
-from django.conf.urls import path
-# 从当前的urls.py所在文件夹导入views
-from . import views
+      # urlpatterns包含项目中的应用程序的URL
+      urlpatterns = [
+          # admin.site.urls定义了在管理网站中请求的所有URL
+          path('admin/', include(admin.site.urls)),
+          # namespace让learning_logs的URL与项目中的其他URL区分
+          path('', include('learning_logs.urls', namespace='learning_logs')),
+          ]
+      ```  
+   - (2) learning_logs中的urls.py
+      ```python
+      """定义learning_logs的URL模式"""
+      # 用path将URL映射到视图
+      from django.conf.urls import path
+      # 从当前的urls.py所在文件夹导入views
+      from . import views
 
-app_name = 'learning_logs'
-# 包含可在应用程序learning_ logs中请求的网页
-urlpatterns = [
-    # path包含三个参数，第一个参数，定义了Django可查找的模式。python忽略项目的基础URL（http://localhost:8000）
-    # 第二个参数,指定要调用的视图函数
-    # 第三个参数，将URL模式的名称指定为index，在代码其他地方能引用它
-    # 主页
-    path('', views.index, name='index'),
-]
-```
+      app_name = 'learning_logs'
+      # 包含可在应用程序learning_ logs中请求的网页
+      urlpatterns = [
+          # path包含三个参数，第一个参数，定义了Django(可查找的模式)。python忽略项目的基础URL（http://localhost:8000）
+          # 第二个参数,指定要调用的(视图函数)
+          # 第三个参数，将(URL模式)的名称指定为index，在代码其他地方能引用它
+          # 主页
+          path('', views.index, name='index'),
+      ]
+      ```
 
 2. 编写视图
 learning_logs下的views.py
@@ -274,17 +274,163 @@ def index(request):
     # render()根据视图提供的数据渲染响应
     return render(request, 'learning_logs/index.html')
 ```
-**当URL请求与定义的URL模式匹配时**，Django将在文件views.py查找index(),再将请求对象传递给这个视图函数。
-3. 编写模板
+**当URL请求与定义的URL模式匹配时**，Django将在文件views.py查找index(),再将请求对象传递给这个视图函数。  
+
+3. 编写模板  
 **模板**定义了网页的结构。  
    - (1) 文件夹learning_logs中新建一个文件夹，并将其命名为templates。  
    - (2) 在templates中新建learning_logs文件夹，
-   - (3) 在learning_logs中新建index.html。
-index.html
-```html
-<p>Learning Log</p>
+   - (3) 在learning_logs中新建index.html。    
+      learning_logs/templates/learning_logs/index.html
+      ```html
+      <p>Learning Log</p>
 
-<p>Learning Log helps ...</p>
-```
+      <p>Learning Log helps ...</p>
+      ```
+
 # 四、创建其他网页
-  
+1. 模板继承
+   - (1) 父模板  
+   **模板标签**:{% %}，生成要在页面中显示的信息。  
+   index.html所在目录新建base.html
+   ```html
+   <p>
+       <!--生成一个URL ,它与learning_logs/urls.py中定义的名为index的URL模式匹配-->
+       <!--learning_logs是一个命名空间，index是该命名空间中一个名称独特的URL模式 -->
+       <a href="{% url 'learning_logs:index' %}">Learning Log</a>
+   </p>
+   <!--块标签，块名content。由子模板决定包含的内容-->
+   {% block content %}{% endblock content %}
+   ```  
+   - (2) 子模板:只包含当前网页特有的内容（模板继承优点）  
+   index.html
+   ```html
+   <!--继承base.html,base.html位于learning_logs文件夹中-->
+   {% extends "learning_logs/base.html" %}
+
+   {% block content %}
+     <p>Learning Log helps you keep track of your learning, for any topic you're 
+         learning about.</p>
+   {% endblock content %}
+   ```
+
+2. 显示所有主题的页面
+   - (1) URL模式  
+   先定义显示所有主题的页面的URL。用一个简单的URL片段指出网页显示的信息；将使用topics，因此URLhttp://localhost:8000/topics/将返回显示所有主题的页面。    
+   learning_logs/urls.py
+   ```python
+   --snip--
+   urlpattrerns = [
+       # 主页
+       path('', views.index, name='index')
+       # 显示所有主题
+       path('topics/', views.topics, name='topics')
+   ]
+   ```   
+   - (2) 视图函数topics()从数据库获取一些数据，并将其发送给模板      
+   learning_logs/views.py
+   ```python
+   from django.shortcuts import render
+   # 导入与所需数据相关的模型
+   from .models import Topic
+   def index(request):
+       --snip--
+
+   def topics(request):
+       """显示所有的主题"""
+       # 查询数据库——请求提供Topic对象，按属性date_added排序，返回的查询集放在topics中
+       topics = Topic.objects.order_by('date_added')
+       # 定义一个发给模板的上下文（字典），键是在模板中用来访问数据的名称，值是发送给模板的数据
+       context = {'topics': topics}
+       # render(request, '模板路径'，context)
+       return render(request, 'learning_logs/topics.html', context)
+   ```
+   - (3) 模板接受字典context    
+   index.html所在目录,新建topics.html
+   ```html
+   <!--继承base.html,base.html位于templates/learning_logs文件夹中-->
+   {% extends "learning_logs/base.html" %}
+
+   {% block content %}
+     <p>Topics</p>
+     <ul>
+         <!--遍历字典context中的列表topics-->
+         {% for topic in topics%}
+           <li>{{ topic }}</li>
+         {% empty %}
+           <li>No topics have been added yet</li>
+         {% endfor %}
+     </ul>
+   {% endblock content %}
+   ```
+3. 显示特定主题的页面
+   - (1) URL模式  
+   learning_logs/urls.py
+   ```python
+   from django.urls import path, re_path
+
+   from . import views
+   --snip--
+   urlpatterns = [
+       --snip--
+       # 显示特定主题的详细页面
+       # r'':原始字符串;^和$:起始和结束;():捕获URL中的值；？P<topic_id>:匹配的值存储到topic_id;\d+:与两斜杠中的任意数字匹配
+       # 当URL与这个模式匹配时，调用视图函数topic(),并将topic_id的值作为实参传递给它。
+       re_path(r'^topics/(?P<topic_id>\d+)/$', views.topic, name='topic')
+       ]
+   ```
+   - (2) 编写视图  
+   learning_logs/views.py
+   ```python
+   --snip--
+   # topic_id接受(?P<topic_id>\d+)正则表达式捕获的值
+   def topic(request, topic_id):
+       """显示单个主题及其所有条目"""
+       # get()获取指定主题
+       topic = Topic.onjects.get(id=topic_id)
+       # 获取与主题相关的条目，按date_added降序排列
+       entries = topic.entry_set.oreder_by('-date_added')
+       # 主题和条目存放在字典中，再将字典传给topic.html
+       context = {'topic': topic, 'entries': entries}
+       return render(request, 'learning_logs/topics.html', context)
+   ```
+   - (3) 编写模板  
+   topic.html
+   ```html
+   {% extends 'learning_logs.base.html' %}
+
+   {% block content %}
+     <!--在模板中打印变量，将变量名用双括号括起来，模板变量-->
+     <p>Topic: {{ topic }}</p>
+     <p>Entries: </p>
+     <ul>
+         {% for entry in entries%}
+           <li>
+               <!--显示条目的时间戳和文本，竖线(|)表示模板过滤器--对模板变量的值进行修改的函数-->
+               <!--过滤器date：'M d, Y H:i'---以“月 日, 年 时:分”格式显示时间戳-->
+               <!--过滤器linebreaks将包含换行符的长条目转换为浏览器能够理解的格式，避免出现不间断的文本块-->
+               <p>{{ entry.date_added|date:'M d, Y H:i' }}</p>
+               <p>{{ entry.text|linebreaks }}</p>
+           </li>
+         {% empty %}
+           <li>
+               There are no entries for this topic yet.
+           </li>
+         {% endfor %}
+     </ul>
+   {% endblock content %}
+   ```
+   
+   - (4) 将显示所有主题的页面中每个主题都设置链接  
+   修改topics.html
+   ```python
+   --snip--
+       {% for topic in topics %}
+         <li>
+           <!--使用模板标签url根据learning_logs中名为topic的URL模式（要求提供实参topic_id）生成合适的链接-->
+           <a href="{% url 'learning_logs:topic' topic.id %}">{{ topic }}</a>
+         </li>
+       {% empty %}
+   --snip--
+   ```
+   

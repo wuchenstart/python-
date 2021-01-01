@@ -227,5 +227,64 @@ python manage.py shell
 ```
 
 # 三、创建网页：学习笔记主页
+用Djan创建网页的过程三阶段：**定义URL、编写视图、编写模板**  
+**URL模式**描述URL如何设计，让Django知道如何将浏览器请求与网站URL匹配，以确定返回哪个网页。  
+每个URL映射到特定的视图，**视图函数**获取并处理网页所需要的数据，视图函数通常调用一个模板，**模板**生成浏览器能够理解的网页。  
+1. 映射URL
+项目主文件夹learning_log的urls.py
+```python
+# 导入为项目和管理网站管理URL的函数和模块
+from django.conf.urls import include, path
+from django.contrib import admin
+
+# urlpatterns包含项目中的应用程序的URL
+urlpatterns = [
+    # admin.site.urls定义了在管理网站中请求的所有URL
+    path('admin/', include(admin.site.urls)),
+    # namespace让learning_logs的URL与项目中的其他URL区分
+    path('', include('learning_logs.urls', namespace='learning_logs')),
+    ]
+```  
+learning_logs中的urls.py
+```python
+"""定义learning_logs的URL模式"""
+# 用path将URL映射到视图
+from django.conf.urls import path
+# 从当前的urls.py所在文件夹导入views
+from . import views
+
+app_name = 'learning_logs'
+# 包含可在应用程序learning_ logs中请求的网页
+urlpatterns = [
+    # path包含三个参数，第一个参数，定义了Django可查找的模式。python忽略项目的基础URL（http://localhost:8000）
+    # 第二个参数,指定要调用的视图函数
+    # 第三个参数，将URL模式的名称指定为index，在代码其他地方能引用它
+    # 主页
+    path('', views.index, name='index'),
+]
+```
+
+2. 编写视图
+learning_logs下的views.py
+```python
+from django.shortcuts import render
+
+def index(request):
+    """学习笔记主页"""
+    # render()根据视图提供的数据渲染响应
+    return render(request, 'learning_logs/index.html')
+```
+**当URL请求与定义的URL模式匹配时**，Django将在文件views.py查找index(),再将请求对象传递给这个视图函数。
+3. 编写模板
+模板定义了网页的结构。  
+   - (1) 文件夹learning_logs中新建一个文件夹，并将其命名为templates。  
+   - (2) 在templates中新建learning_logs文件夹，
+   - (3) 在learning_logs中新建index.html。
+index.html
+```python
+<p>Learning Log</p>
+
+<p>Learning Log helps ...</p>
+```
 # 四、创建其他网页
   

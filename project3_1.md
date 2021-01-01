@@ -47,10 +47,10 @@ pip install Django
     dir learning_log
     # 输出：
     # __init__.py setting.py urls.py wsgi.py
-    # settings.py指定Django如何与系统交互以及如何管理项目。修改、添加设置；添加我的应用程序
-    # urls.py告诉Django应创建哪些网页来响应浏览器请求
-    # wsgi.py帮助Django提供它创建的文件，文件名是Web服务器网关接口（不懂？？？）
     ``` 
+ **settings.py**指定Django如何与系统交互以及如何管理项目。修改、添加设置；添加我的应用程序  
+ **urls.py**告诉Django应创建哪些网页来响应浏览器请求  
+ **wsgi.py**帮助Django提供它创建的文件，文件名是Web服务器网关接口（不懂？？？）
 
 6. 创建数据库  
    - (1) **修改**数据库称**迁移**数据库
@@ -89,10 +89,10 @@ python manage.py startapp learning_logs
 dir learning_logs
 # 结果：
 # admin.py __init__.py migrations models.py tests.py views.py
-# models.py定义应用程序中管理的数据
 ```  
-# views.py
-# admin.py
+**models.py**-定义应用程序中管理的数据
+**views.py**-用于存放视图函数
+**admin.py**-用于注册模型
 1. 定义模型：在代码层面，模型就是一个类  
 models.py
 ```python
@@ -276,12 +276,12 @@ def index(request):
 ```
 **当URL请求与定义的URL模式匹配时**，Django将在文件views.py查找index(),再将请求对象传递给这个视图函数。
 3. 编写模板
-模板定义了网页的结构。  
+**模板**定义了网页的结构。  
    - (1) 文件夹learning_logs中新建一个文件夹，并将其命名为templates。  
    - (2) 在templates中新建learning_logs文件夹，
    - (3) 在learning_logs中新建index.html。
 index.html
-```python
+```html
 <p>Learning Log</p>
 
 <p>Learning Log helps ...</p>

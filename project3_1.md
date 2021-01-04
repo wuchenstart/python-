@@ -294,15 +294,13 @@ def index(request):
    **模板标签**:大括号和百分号,页面中显示的信息。  
    index.html所在目录新建base.html
    ```html
-   <code>
-   <p>
-       <!--生成一个URL ,它与learning_logs/urls.py中定义的名为index的URL模式匹配-->
-       <!--learning_logs是一个命名空间，index是该命名空间中一个名称独特的URL模式 -->
-       <a href="{% url 'learning_logs:index' %}">Learning Log</a>
-   </p>
-   <!--块标签，块名content。由子模板决定包含的内容-->
-   {% block content %}{% endblock content %}
-   </code>   
+   > <p>
+       > <!--生成一个URL ,它与learning_logs/urls.py中定义的名为index的URL模式匹配-->
+       > <!--learning_logs是一个命名空间，index是该命名空间中一个名称独特的URL模式 -->
+       > <a href="{% url 'learning_logs:index' %}">Learning Log</a>
+   > </p>
+   > <!--块标签，块名content。由子模板决定包含的内容-->
+   > {% block content %}{% endblock content %}
    ```  
    - (2) 子模板:只包含当前网页特有的内容（模板继承优点）  
    index.html

@@ -308,7 +308,7 @@ def index(request):
    index.html  
    <!--继承base.html,base.html位于learning_logs文件夹中-->
    ```
-   {% extends "learning_logs/base.html" %}
+
 
    {% block content %}
      <html>

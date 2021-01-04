@@ -291,7 +291,7 @@ def index(request):
 # 四、创建其他网页
 1. 模板继承
    - (1) 父模板  
-   **模板标签**:{% %}，生成要在页面中显示的信息。  
+   **模板标签**:{% templatetags %}，生成要在页面中显示的信息。  
    index.html所在目录新建base.html
    ```html
    <p>

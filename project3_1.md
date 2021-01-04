@@ -294,22 +294,13 @@ def index(request):
    **模板标签**:大括号和百分号,页面中显示的信息。  
    index.html所在目录新建base.html
 ```python
-{% if latest_question_list %}
-    <ul>
-    {% for question in latest_question_list %}
-        <li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No polls are available.</p>
-{% endif %}
+
 ```  
    - (2) 子模板:只包含当前网页特有的内容（模板继承优点）  
    index.html  
    <!--继承base.html,base.html位于learning_logs文件夹中-->
    ```
-
-
+   {% extends "learning_logs/base.html" %}
    {% block content %}
      <html>
        <p>Learning Log helps you keep track of your learning, for any topic you're 

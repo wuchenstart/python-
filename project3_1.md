@@ -172,7 +172,7 @@ Django提供的管理网站（admin site）,处理模型。网站管理员可使
 
 4.  定义模型Entry  
 添加条目定义模型，每个条目与特定主题相关联，**多对一关系**。即多个条目关联到同一主题  
-**外键**，引用了数据库中的另一条记录；将每个条目关联到特定主题。
+**外键**，引用了数据库中的另一条记录；将每个条目关联到特定主题。  
 models.py
 ```python
 from django.db import models
@@ -291,9 +291,10 @@ def index(request):
 # 四、创建其他网页
 1. 模板继承
    - (1) 父模板  
-   **模板标签**:大括号和百分号，生成要在页面中显示的信息。  
+   **模板标签**:大括号和百分号<code>{% %}</code>页面中显示的信息。  
    index.html所在目录新建base.html
    ```html
+   <code>
    <p>
        <!--生成一个URL ,它与learning_logs/urls.py中定义的名为index的URL模式匹配-->
        <!--learning_logs是一个命名空间，index是该命名空间中一个名称独特的URL模式 -->
@@ -301,6 +302,7 @@ def index(request):
    </p>
    <!--块标签，块名content。由子模板决定包含的内容-->
    {% block content %}{% endblock content %}
+   </code>   
    ```  
    - (2) 子模板:只包含当前网页特有的内容（模板继承优点）  
    index.html

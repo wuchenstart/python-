@@ -297,14 +297,16 @@ def index(request):
 
    ```  
    - (2) 子模板:只包含当前网页特有的内容（模板继承优点）  
-   index.html
-   ```html
+   index.html  
    <!--继承base.html,base.html位于learning_logs文件夹中-->
+   ```
    {% extends "learning_logs/base.html" %}
 
    {% block content %}
-     <p>Learning Log helps you keep track of your learning, for any topic you're 
-         learning about.</p>
+     <html>
+       <p>Learning Log helps you keep track of your learning, for any topic you're 
+         learning about.</p>
+     </html>
    {% endblock content %}
    ```
 

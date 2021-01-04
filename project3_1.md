@@ -90,9 +90,9 @@ dir learning_logs
 # 结果：
 # admin.py __init__.py migrations models.py tests.py views.py
 ```  
-**models.py**-定义应用程序中管理的数据
-**views.py**-用于存放视图函数
-**admin.py**-用于注册模型
+**models.py**-定义应用程序中管理的数据  
+**views.py**-用于存放视图函数  
+**admin.py**-用于注册模型  
 1. 定义模型：在代码层面，模型就是一个类  
 models.py
 ```python

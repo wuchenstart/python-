@@ -188,7 +188,7 @@ class Entry(models.Model):
     text = models.TextField()
     date_added = models.DateTimeField(auto_now_add=True)
     
-    # Meta存储用于管理管理模型的额外信息。设置一个特殊属性，Entries来表示多个条目。
+    # Meta存储用于管理模型的额外信息。设置一个特殊属性，Entries来表示多个条目。
     # 若无这个类，用Entrys表示多个条目
     class Meta:
         verbose_name_plural = 'entries'
@@ -245,7 +245,7 @@ python manage.py shell
           path('', include('learning_logs.urls', namespace='learning_logs')),
           ]
       ```  
-   - (2) learning_logs中的urls.py
+   - (2) learning_logs中新建urls.py
       ```python
       """定义learning_logs的URL模式"""
       # 用path将URL映射到视图
@@ -293,13 +293,20 @@ def index(request):
    - (1) 父模板  
    **模板标签**:大括号和百分号,页面中显示的信息。  
    index.html所在目录新建base.html
-```python
+```html
+   <p>
+       <!--生成一个URL ,它与learning_logs/urls.py中定义的名为index的URL模式匹配-->
+       <!--learning_logs是一个命名空间，index是该命名空间中一个名称独特的URL模式 -->
+       <a href="{% url 'learning_logs:index' %}">Learning Log</a>
+   </p>
+   <!--块标签，块名content。由子模板决定包含的内容-->
+   {% block content %}{% endblock content %}
 
 ```  
    - (2) 子模板:只包含当前网页特有的内容（模板继承优点）  
    index.html  
+   ```html
    <!--继承base.html,base.html位于learning_logs文件夹中-->
-   ```
    {% extends "learning_logs/base.html" %}
    {% block content %}
      <html>
@@ -315,7 +322,7 @@ def index(request):
    learning_logs/urls.py
    ```python
    --snip--
-   urlpattrerns = [
+   urlpatterns = [
        # 主页
        path('', views.index, name='index')
        # 显示所有主题
@@ -382,12 +389,12 @@ def index(request):
    def topic(request, topic_id):
        """显示单个主题及其所有条目"""
        # get()获取指定主题
-       topic = Topic.onjects.get(id=topic_id)
+       topic = Topic.objects.get(id=topic_id)
        # 获取与主题相关的条目，按date_added降序排列
        entries = topic.entry_set.oreder_by('-date_added')
        # 主题和条目存放在字典中，再将字典传给topic.html
        context = {'topic': topic, 'entries': entries}
-       return render(request, 'learning_logs/topics.html', context)
+       return render(request, 'learning_logs/topic.html', context)
    ```
    - (3) 编写模板  
    topic.html

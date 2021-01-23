@@ -1,7 +1,7 @@
 1. 条件测试
    * 比较：==,!=,>,<
    * 检查多个条件：and,or
-   * 检查特定值是否在列表：in,or
+   * 检查特定值是否在列表：in,not in
    * 布尔: True,False
 2. if-elif-else
 ```python
